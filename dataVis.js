@@ -45,6 +45,6 @@ d3.csv(dataSheet, function(d) {
 });
 */
 
-d3.csv(dataSheet, function(d) {
+d3.csv(dataSheet, function(data) {
   console.log(data[0]);
 });
