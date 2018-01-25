@@ -7,11 +7,23 @@ html, body {
   fill: steelblue;
 } */
 
+
+body {
+  font: 10px sans-serif;
+}
+
 .bar:hover {
   fill: red;
 }
 
-.axis--x path {
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
   display: none;
 }
 

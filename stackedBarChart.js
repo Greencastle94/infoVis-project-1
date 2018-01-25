@@ -1,83 +1,49 @@
-
-var margin = {top: 20, right: 20, bottom: 30, left: 40};
-var width = +svg.attr("width") - margin.left - margin.right;
-var height = +svg.attr("height") - margin.top - margin.bottom;
-var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+var svg = d3.select("body")
+            .append("svg")
+            .attr("width",958)
+            .attr("height",500);
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = +svg.attr("width") - margin.left - margin.right,
+    height = +svg.attr("height") - margin.top - margin.bottom,
+    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 var x = d3.scaleBand()
     .rangeRound([0, width])
-    .paddingInner(0.1)
+    .paddingInner(0.05)
     .align(0.1);
 
 var y = d3.scaleLinear()
     .rangeRound([height, 0]);
 
-var color = d3.scaleOrdinal()
+var z = d3.scaleOrdinal()
     .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
-// var xAxis = d3.svg.axis()
-//     .scale(x)
-//     .orient("bottom");
-//
-// var yAxis = d3.svg.axis()
-//     .scale(y)
-//     .orient("left")
-//     .tickFormat(d3.format(".2s"));
-//
-// var active_link = "0"; //to control legend selections and hover
-// var legendClicked; //to control legend selections
-// var legendClassArray = []; //store legend classes to select bars in plotSingle()
-// var y_orig; //to store original y-posn
-
-var svg = d3.select("body")
-            .append("svg")
-            .attr("width",958)
-            .attr("height",500);
-
-d3.csv("transformedData.csv", function(d, i, columns) {
-  for (i = 3, t = 0; i < columns.length; ++i)
-    t += d[columns[i]] = +d[columns[i]];
+d3.csv("editedResponses.csv", function(d, i, columns) {
+  for (i = 1, t = 0; i < columns.length; ++i) t += d[columns[i]] = +d[columns[i]];
   d.total = t;
   return d;
 }, function(error, data) {
   if (error) throw error;
 
-  // Keys for the different skills
-  var keys = data.columns.slice(3);
+  var keys = data.columns.slice(1);
 
   data.sort(function(a, b) { return b.total - a.total; });
-  x.domain(data.map(function(d) { return d.Alias; }));
+  x.domain(data.map(function(d) { return d.State; }));
   y.domain([0, d3.max(data, function(d) { return d.total; })]).nice();
-  color.domain(keys);
-
-  console.log(data)
-  //console.log(d3.stack().keys(keys)(data));
-
-  /* Initialize tooltip */
-  tip = d3.tip().attr('class', 'd3-tip')
-          .offset([-10, 0])
-          .html(function(d) {
-            return d.data.Alias;
-          });
-
-  /* Invoke the tip in the context of your visualization */
-  svg.call(tip)
+  z.domain(keys);
 
   g.append("g")
     .selectAll("g")
     .data(d3.stack().keys(keys)(data))
     .enter().append("g")
-      .attr("fill", function(d) { return color(d.key); })
+      .attr("fill", function(d) { return z(d.key); })
     .selectAll("rect")
     .data(function(d) { return d; })
     .enter().append("rect")
-      .attr("class", "bar")
-      .attr("x", function(d) { return x(d.data.Alias); })
+      .attr("x", function(d) { return x(d.data.State); })
       .attr("y", function(d) { return y(d[1]); })
       .attr("height", function(d) { return y(d[0]) - y(d[1]); })
-      .attr("width", x.bandwidth())
-      .on('mouseover', tip.show)
-      .on('mouseout', tip.hide);
+      .attr("width", x.bandwidth());
 
   g.append("g")
       .attr("class", "axis")
@@ -93,8 +59,8 @@ d3.csv("transformedData.csv", function(d, i, columns) {
       .attr("dy", "0.32em")
       .attr("fill", "#000")
       .attr("font-weight", "bold")
-      .attr("text-anchor", "start");
-      // .text("Population");
+      .attr("text-anchor", "start")
+      .text("Population");
 
   var legend = g.append("g")
       .attr("font-family", "sans-serif")
