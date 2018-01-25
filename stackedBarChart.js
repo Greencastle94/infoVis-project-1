@@ -2,10 +2,17 @@ var svg = d3.select("body")
             .append("svg")
             .attr("width",958)
             .attr("height",500);
+<<<<<<< HEAD
 var margin = {top: 20, right: 20, bottom: 30, left: 40},
     width = +svg.attr("width") - margin.left - margin.right,
     height = +svg.attr("height") - margin.top - margin.bottom,
     g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+=======
+var margin = {top: 20, right: 20, bottom: 30, left: 40};
+var width = +svg.attr("width") - margin.left - margin.right;
+var height = +svg.attr("height") - margin.top - margin.bottom;
+var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+>>>>>>> parent of a08171f... Found a better stacked barchart code
 
 var x = d3.scaleBand()
     .rangeRound([0, width])
@@ -18,8 +25,14 @@ var y = d3.scaleLinear()
 var z = d3.scaleOrdinal()
     .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
+<<<<<<< HEAD
 d3.csv("editedResponses.csv", function(d, i, columns) {
   for (i = 1, t = 0; i < columns.length; ++i) t += d[columns[i]] = +d[columns[i]];
+=======
+d3.csv("transformedData.csv", function(d, i, columns) {
+  for (i = 3, t = 0; i < columns.length; ++i)
+    t += d[columns[i]] = +d[columns[i]];
+>>>>>>> parent of a08171f... Found a better stacked barchart code
   d.total = t;
   return d;
 }, function(error, data) {
@@ -31,6 +44,22 @@ d3.csv("editedResponses.csv", function(d, i, columns) {
   x.domain(data.map(function(d) { return d.State; }));
   y.domain([0, d3.max(data, function(d) { return d.total; })]).nice();
   z.domain(keys);
+<<<<<<< HEAD
+=======
+
+  console.log(data)
+  //console.log(d3.stack().keys(keys)(data));
+
+  /* Initialize tooltip */
+  tip = d3.tip().attr('class', 'd3-tip')
+          .offset([-10, 0])
+          .html(function(d) {
+            return d.data.Alias;
+          });
+
+  /* Invoke the tip in the context of your visualization */
+  svg.call(tip)
+>>>>>>> parent of a08171f... Found a better stacked barchart code
 
   g.append("g")
     .selectAll("g")

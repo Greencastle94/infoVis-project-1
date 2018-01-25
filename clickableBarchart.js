@@ -38,6 +38,7 @@ d3.csv("testData2.csv", function(error, data) {
     var mystate = d.State; //add to stock code
     var y0 = 0;
     //d.ages = color.domain().map(function(name) { return {name: name, y0: y0, y1: y0 += +d[name]}; });
+    var keys = data.columns.slice(1);
     d.ages = color.domain().map(function(name) { return {mystate:mystate, name: name, y0: y0, y1: y0 += +d[name]}; });
     d.total = d.ages[d.ages.length - 1].y1;
 
