@@ -2,21 +2,15 @@ var svg = d3.select("body")
             .append("svg")
             .attr("width",958)
             .attr("height",500);
-<<<<<<< HEAD
-var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = +svg.attr("width") - margin.left - margin.right,
-    height = +svg.attr("height") - margin.top - margin.bottom,
-    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-=======
+
 var margin = {top: 20, right: 20, bottom: 30, left: 40};
 var width = +svg.attr("width") - margin.left - margin.right;
 var height = +svg.attr("height") - margin.top - margin.bottom;
 var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
->>>>>>> parent of a08171f... Found a better stacked barchart code
 
 var x = d3.scaleBand()
     .rangeRound([0, width])
-    .paddingInner(0.05)
+    .paddingInner(0.1)
     .align(0.1);
 
 var y = d3.scaleLinear()
@@ -33,10 +27,10 @@ d3.csv("transformedData.csv", function(d, i, columns) {
 }, function(error, data) {
   if (error) throw error;
 
-  var keys = data.columns.slice(1);
+  var keys = data.columns.slice(3);
 
   data.sort(function(a, b) { return b.total - a.total; });
-  x.domain(data.map(function(d) { return d.State; }));
+  x.domain(data.map(function(d) { return d.Alias; }));
   y.domain([0, d3.max(data, function(d) { return d.total; })]).nice();
   z.domain(keys);
 
@@ -61,10 +55,13 @@ d3.csv("transformedData.csv", function(d, i, columns) {
     .selectAll("rect")
     .data(function(d) { return d; })
     .enter().append("rect")
-      .attr("x", function(d) { return x(d.data.State); })
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.data.Alias); })
       .attr("y", function(d) { return y(d[1]); })
       .attr("height", function(d) { return y(d[0]) - y(d[1]); })
-      .attr("width", x.bandwidth());
+      .attr("width", x.bandwidth())
+      .on('mouseover', tip.show)
+      .on('mouseout', tip.hide);
 
   g.append("g")
       .attr("class", "axis")
