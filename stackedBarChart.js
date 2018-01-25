@@ -1,7 +1,4 @@
-var svg = d3.select("body")
-            .append("svg")
-            .attr("width",958)
-            .attr("height",500);
+
 var margin = {top: 20, right: 20, bottom: 30, left: 40};
 var width = +svg.attr("width") - margin.left - margin.right;
 var height = +svg.attr("height") - margin.top - margin.bottom;
@@ -15,8 +12,27 @@ var x = d3.scaleBand()
 var y = d3.scaleLinear()
     .rangeRound([height, 0]);
 
-var z = d3.scaleOrdinal()
+var color = d3.scaleOrdinal()
     .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+// var xAxis = d3.svg.axis()
+//     .scale(x)
+//     .orient("bottom");
+//
+// var yAxis = d3.svg.axis()
+//     .scale(y)
+//     .orient("left")
+//     .tickFormat(d3.format(".2s"));
+//
+// var active_link = "0"; //to control legend selections and hover
+// var legendClicked; //to control legend selections
+// var legendClassArray = []; //store legend classes to select bars in plotSingle()
+// var y_orig; //to store original y-posn
+
+var svg = d3.select("body")
+            .append("svg")
+            .attr("width",958)
+            .attr("height",500);
 
 d3.csv("transformedData.csv", function(d, i, columns) {
   for (i = 3, t = 0; i < columns.length; ++i)
@@ -32,7 +48,7 @@ d3.csv("transformedData.csv", function(d, i, columns) {
   data.sort(function(a, b) { return b.total - a.total; });
   x.domain(data.map(function(d) { return d.Alias; }));
   y.domain([0, d3.max(data, function(d) { return d.total; })]).nice();
-  z.domain(keys);
+  color.domain(keys);
 
   console.log(data)
   //console.log(d3.stack().keys(keys)(data));
@@ -51,7 +67,7 @@ d3.csv("transformedData.csv", function(d, i, columns) {
     .selectAll("g")
     .data(d3.stack().keys(keys)(data))
     .enter().append("g")
-      .attr("fill", function(d) { return z(d.key); })
+      .attr("fill", function(d) { return color(d.key); })
     .selectAll("rect")
     .data(function(d) { return d; })
     .enter().append("rect")
