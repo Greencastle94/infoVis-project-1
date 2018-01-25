@@ -1,9 +1,9 @@
 var svg = d3.select("body")
             .append("svg")
             .attr("width",958)
-            .attr("height",500);
+            .attr("height",600);
 
-var margin = {top: 20, right: 20, bottom: 30, left: 40};
+var margin = {top: 20, right: 20, bottom: 100, left: 40};
 var width = +svg.attr("width") - margin.left - margin.right;
 var height = +svg.attr("height") - margin.top - margin.bottom;
 var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -41,6 +41,7 @@ d3.csv("transformedData.csv", function(d, i, columns) {
   tip = d3.tip().attr('class', 'd3-tip')
           .offset([-10, 0])
           .html(function(d) {
+            console.log(d.data.Alias);
             return d.data.Alias;
           });
 
@@ -66,7 +67,10 @@ d3.csv("transformedData.csv", function(d, i, columns) {
   g.append("g")
       .attr("class", "axis")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
+      .call(d3.axisBottom(x))
+      .selectAll("text")
+      .attr("transform", "rotate(90)")
+      .style("text-anchor", "start");
 
   g.append("g")
       .attr("class", "axis")
@@ -77,8 +81,8 @@ d3.csv("transformedData.csv", function(d, i, columns) {
       .attr("dy", "0.32em")
       .attr("fill", "#000")
       .attr("font-weight", "bold")
-      .attr("text-anchor", "start")
-      .text("Population");
+      .attr("text-anchor", "start");
+      //.text("Population");
 
   var legend = g.append("g")
       .attr("font-family", "sans-serif")

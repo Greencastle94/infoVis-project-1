@@ -33,15 +33,13 @@ d3.csv("testData2.csv", function(error, data) {
   if (error) throw error;
 
   color.domain(d3.keys(data[0]).filter(function(key) { return key !== "State"; }));
-  console.log(data);
+  // console.log(data);
   data.forEach(function(d) {
     var mystate = d.State; //add to stock code
     var y0 = 0;
     //d.ages = color.domain().map(function(name) { return {name: name, y0: y0, y1: y0 += +d[name]}; });
-    var keys = data.columns.slice(1);
     d.ages = color.domain().map(function(name) { return {mystate:mystate, name: name, y0: y0, y1: y0 += +d[name]}; });
     d.total = d.ages[d.ages.length - 1].y1;
-
   });
 
   data.sort(function(a, b) { return b.total - a.total; });
@@ -88,28 +86,28 @@ d3.csv("testData2.csv", function(error, data) {
       })
       .style("fill", function(d) { return color(d.name); });
 
-  state.selectAll("rect")
-       .on("mouseover", function(d){
-
-          var delta = d.y1 - d.y0;
-          var xPos = parseFloat(d3.select(this).attr("x"));
-          var yPos = parseFloat(d3.select(this).attr("y"));
-          var height = parseFloat(d3.select(this).attr("height"))
-
-          d3.select(this).attr("stroke","blue").attr("stroke-width",0.8);
-
-          svg.append("text")
-          .attr("x",xPos)
-          .attr("y",yPos +height/2)
-          .attr("class","tooltip")
-          .text(d.name +": "+ delta);
-
-       })
-       .on("mouseout",function(){
-          svg.select(".tooltip").remove();
-          d3.select(this).attr("stroke","pink").attr("stroke-width",0.2);
-
-        })
+  // state.selectAll("rect")
+  //      .on("mouseover", function(d){
+  //
+  //         var delta = d.y1 - d.y0;
+  //         var xPos = parseFloat(d3.select(this).attr("x"));
+  //         var yPos = parseFloat(d3.select(this).attr("y"));
+  //         var height = parseFloat(d3.select(this).attr("height"))
+  //
+  //         d3.select(this).attr("stroke","blue").attr("stroke-width",0.8);
+  //
+  //         svg.append("text")
+  //         .attr("x",xPos)
+  //         .attr("y",yPos +height/2)
+  //         .attr("class","tooltip")
+  //         .text(d.name +": "+ delta);
+  //
+  //      })
+  //      .on("mouseout",function(){
+  //         svg.select(".tooltip").remove();
+  //         d3.select(this).attr("stroke","pink").attr("stroke-width",0.2);
+  //
+  //       })
 
 
   var legend = svg.selectAll(".legend")
@@ -124,7 +122,7 @@ d3.csv("testData2.csv", function(error, data) {
 
   //reverse order to match order in which bars are stacked
   legendClassArray = legendClassArray.reverse();
-
+  
   legend.append("rect")
       .attr("x", width - 18)
       .attr("width", 18)
@@ -214,10 +212,11 @@ d3.csv("testData2.csv", function(error, data) {
   }
 
   function plotSingle(d) {
-
     class_keep = d.id.split("id").pop();
     idx = legendClassArray.indexOf(class_keep);
-
+    console.log(legendClassArray);
+    console.log(d.id.split("id"));
+    console.log(idx);
     //erase all but selected bars by setting opacity to 0
     for (i = 0; i < legendClassArray.length; i++) {
       if (legendClassArray[i] != class_keep) {
@@ -227,11 +226,11 @@ d3.csv("testData2.csv", function(error, data) {
           .style("opacity", 0);
       }
     }
-
+    console.log(d3.select(d));
     //lower the bars to start on x-axis
     y_orig = [];
-    state.selectAll("rect").forEach(function (d, i) {
-
+    state.selectAll("rect").each(function (d, i) {
+      console.log(d3.select(this));
       //get height and y posn of base bar and selected bar
       h_keep = d3.select(d[idx]).attr("height");
       y_keep = d3.select(d[idx]).attr("y");
