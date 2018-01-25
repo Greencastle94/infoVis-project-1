@@ -41,7 +41,7 @@ d3.csv("transformedData.csv", function(d, i, columns) {
   tip = d3.tip().attr('class', 'd3-tip')
           .offset([-10, 0])
           .html(function(d) {
-            console.log(d.data.Alias);
+            // console.log(d.data.Alias);
             return d.data.Alias;
           });
 
